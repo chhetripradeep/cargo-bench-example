@@ -5,3 +5,4 @@ authors = ["pradeepchhetri <pradeep@stashaway.com>"]
 edition = "2018"
 
 [dependencies]
+numtoa = "0.2.3"

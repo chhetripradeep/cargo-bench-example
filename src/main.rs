@@ -2,6 +2,9 @@
 
 extern crate test;
 
+// most trivial: iterate over nums,
+// convert nums to string and push 
+// them to final result string.
 fn concat_first(val: i64) -> String {
     let mut result = String::new();
 
@@ -12,12 +15,12 @@ fn concat_first(val: i64) -> String {
     result
 }
 
+// pre-decide the size of final result string.
 fn concat_second(val: i64) -> String {
-    let mut result = String::new();
     let length: usize = val.to_string().len();
-    let reservation: usize = (val-1) as usize * length;
+    let capacity: usize = (val-1) as usize * length;
 
-    result.reserve(reservation);
+    let mut result = String::with_capacity(capacity);
 
     for i in 0..val {
         result.push_str(&i.to_string());
@@ -26,6 +29,8 @@ fn concat_second(val: i64) -> String {
     result
 }
 
+// create a vector of numbers and using fold
+// to generate the resultant string.
 fn concat_third(val: i64) -> String {
     let mut vec: Vec<i64> = Vec::new();
 
@@ -39,6 +44,23 @@ fn concat_third(val: i64) -> String {
     )
 }
 
+// heaplessly converting numbers into their string
+fn concat_fourth(val: i64) -> String {
+    use numtoa::NumToA;
+
+    let mut buffer = [0u8; 20];
+    let length: usize = val.to_string().len();
+    let capacity: usize = (val-1) as usize * length;
+    let mut result = String::with_capacity(capacity);
+
+    for i in 0..val {
+        result.push_str(i.numtoa_str(10, &mut buffer));
+    }
+
+    result
+}
+
+// discussion: https://www.reddit.com/r/learnrust/comments/bjyrgf/feedback_on_blogpost/
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -57,5 +79,10 @@ mod tests {
     #[bench]
     fn benchmark_third(b: &mut Bencher) {
         b.iter(|| concat_third(1000));
+    }
+
+    #[bench]
+    fn benchmark_fourth(b: &mut Bencher) {
+        b.iter(|| concat_fourth(1000));
     }
 }
