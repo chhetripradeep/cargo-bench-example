@@ -26,6 +26,19 @@ fn concat_second(val: i64) -> String {
     result
 }
 
+fn concat_third(val: i64) -> String {
+    let mut vec: Vec<i64> = Vec::new();
+
+    for i in 0..val {
+        vec.push(i)
+    }
+
+    vec.iter().fold(
+        String::new(),
+        |accumulator, s| format!("{}{}", accumulator, s)
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -39,5 +52,10 @@ mod tests {
     #[bench]
     fn benchmark_second(b: &mut Bencher) {
         b.iter(|| concat_second(1000));
+    }
+
+    #[bench]
+    fn benchmark_third(b: &mut Bencher) {
+        b.iter(|| concat_third(1000));
     }
 }
